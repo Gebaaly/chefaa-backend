@@ -9,6 +9,8 @@ class ProductImage extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['product_id', 'image'];
+
     public function Product()
     {
         return $this->belongsTo(Product::class)->onDelete('cascade');

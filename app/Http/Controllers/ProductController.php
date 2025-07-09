@@ -16,7 +16,29 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        return Product::with('Images')->where('status', '=', 'published')->paginate($request->input('limit', 10));
+        // بدأنا الاستعلام
+        $query = Product::with('Images')->where('status', '=', 'published');
+
+        // إضافة الفلترة حسب category_id (اللي هو فعليًا category في الفرونت)
+        if ($request->has('category_id')) {
+            $query->where('category', $request->category_id); // فلترة بالـ category
+        }
+
+        // لو كان فيه limit هنستخدمه مع الـ pagination
+        if ($request->has('limit')) {
+            $products = $query->paginate($request->input('limit', 10)); // Pagination
+        } else {
+            $products = $query->get(); // لو مفيش limit هنجيب كل المنتجات
+        }
+
+        return $products;
+    }
+
+
+    public function getLastSaleProducts(Request $request)
+    {
+        $products = Product::with('Images')->where('status', '=', 'published')->where('discount', '>', '0')->latest()->take(5)->get();
+        return $products;
     }
 
     /**
@@ -88,7 +110,6 @@ class ProductController extends Controller
             'price' => $request->price,
             'About' => $request->About,
             'discount' => $request->discount,
-
         ]);
         $product->status = 'published';
         $product->save();
@@ -109,14 +130,13 @@ class ProductController extends Controller
         }
     }
 
-     // Search On Users
-     public function search(Request $request)
-     {
-            $query = $request->input('title');
-            $results = Product::where('title', 'like', "%$query%")->get();
-            return response()->json($results);
-     }
-
+    // Search On Users
+    public function search(Request $request)
+    {
+        $query = $request->input('title');
+        $results = Product::with('Images')->where('title', 'like', "%$query%")->get();
+        return response()->json($results);
+    }
 
     /**
      * Remove the specified resource from storage.

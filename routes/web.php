@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\socialAuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +22,5 @@ Route::get('/', function () {
 
 Route::get('/login-google', [socialAuthController::class, 'redirectToProvider']);
 Route::get('/auth/google/callback', [socialAuthController::class, 'handleCallback']);
+Route::get('/import-products', [ProductController::class, 'importFromJson']);
+ 

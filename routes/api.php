@@ -30,6 +30,10 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/reset-password', 'reset');
 });
 
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/products', [ProductController::class, 'index']);
+Route::get('/latest-sale', [ProductController::class, 'getLastSaleProducts']);
+
 Route::get('/login-google', [socialAuthController::class, 'redirectToProvider']);
 Route::get('/auth/google/callback', [socialAuthController::class, 'handleCallback']);
 
@@ -47,7 +51,7 @@ Route::middleware('auth:api')->group(function () {
     });
     // Product Manger
     Route::middleware('checkProductManager')->controller(CategoryController::class)->group(function () {
-        Route::get('/categories', 'index');
+
         Route::get('/category/{id}', 'show');
         Route::post('/category/search', 'search');
         Route::post('/category/edit/{id}', 'edit');
@@ -56,7 +60,7 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::middleware('checkProductManager')->controller(ProductController::class)->group(function () {
-        Route::get('/products', 'index');
+
         Route::get('/product/{id}', 'show');
         Route::post('/product/search', 'search');
         Route::post('/product/edit/{id}', 'update');

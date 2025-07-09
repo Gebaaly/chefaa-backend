@@ -13,8 +13,10 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
+        $allCategories = Category::all();   
         $categories = Category::paginate($request->input('limit', 10));
-        return $categories;
+        $finalResult=$request->input('limit') ? $categories : $allCategories;
+        return $finalResult;
     }
 
     /**
