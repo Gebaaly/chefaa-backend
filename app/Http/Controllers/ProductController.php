@@ -14,25 +14,21 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
-    {
-        // بدأنا الاستعلام
-        $query = Product::with('Images')->where('status', '=', 'published');
+   public function index(Request $request)
+{
+    $query = Product::with('Images')->where('status', 'published');
 
-        // إضافة الفلترة حسب category_id (اللي هو فعليًا category في الفرونت)
-        if ($request->has('category_id')) {
-            $query->where('category', $request->category_id); // فلترة بالـ category
-        }
-
-        // لو كان فيه limit هنستخدمه مع الـ pagination
-        if ($request->has('limit')) {
-            $products = $query->paginate($request->input('limit', 10)); // Pagination
-        } else {
-            $products = $query->get(); // لو مفيش limit هنجيب كل المنتجات
-        }
-
-        return $products;
+    if ($request->has('category_id')) {
+        $query->where('category', $request->category_id);
     }
+
+    if ($request->has('limit')) {
+        return $query->paginate($request->input('limit'));
+    }
+
+    return $query->get();
+}
+
 
 
     public function getLastSaleProducts(Request $request)
@@ -40,6 +36,21 @@ class ProductController extends Controller
         $products = Product::with('Images')->where('status', '=', 'published')->where('discount', '>', '0')->latest()->take(5)->get();
         return $products;
     }
+
+
+    public function getLatest(Request $request)
+    {
+        $products = Product::with('Images')->where('status', '=', 'published')->latest()->take(6)->get();
+        return $products;
+    }
+
+    public function getTopRated(Request $request)
+    {
+        $products = Product::with('Images')->where('status', '=', 'published')->where('rating', '=', '5')->latest()->take(10)->get();
+        return $products;
+    }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -60,7 +71,8 @@ class ProductController extends Controller
             'description' => 'required',
             'price' => 'required | numeric',
             'discount' => 'required | numeric',
-            'About' => 'required'
+            'About' => 'required',
+            'stock' => 'required | numeric'
         ]);
         $productCreated = $product->create([
             'category' => $request->category,
@@ -69,6 +81,8 @@ class ProductController extends Controller
             'price' => $request->price,
             'About' => $request->About,
             'discount' => $request->discount,
+            'stock' => $request->stock
+
         ]);
         return $productCreated;
     }
@@ -101,6 +115,7 @@ class ProductController extends Controller
             'description' => 'required',
             'price' => 'required | numeric',
             'discount' => 'required | numeric',
+            'stock' => 'required | numeric',
             'About' => 'required'
         ]);
         $product->update([
@@ -110,6 +125,8 @@ class ProductController extends Controller
             'price' => $request->price,
             'About' => $request->About,
             'discount' => $request->discount,
+            'stock' => $request->stock
+
         ]);
         $product->status = 'published';
         $product->save();
@@ -137,6 +154,7 @@ class ProductController extends Controller
         $results = Product::with('Images')->where('title', 'like', "%$query%")->get();
         return response()->json($results);
     }
+
 
     /**
      * Remove the specified resource from storage.

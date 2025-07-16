@@ -8,20 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'category',
-        'title',
-        'description',
-        'price',
-        'About',
-        'discount',
-        'rating',
-        'ratings_number',
-        'status', // ✅ لازم تكون موجودة هنا
-    ];
+    protected $fillable = ['category', 'title', 'description', 'About', 'price', 'discount', 'stock'];
+
     public function Category()
     {
-        return $this->belongsTo(Category::class, 'category');
+        return $this->belongsTo(Category::class);
     }
 
 
@@ -29,5 +20,10 @@ class Product extends Model
     {
         return $this->hasMany(ProductImage::class);
     }
-}
 
+
+    public function Cart()
+    {
+        return $this->hasMany(Cart::class);
+    }
+}
