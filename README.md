@@ -64,3 +64,59 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Getting Started
+
+Follow these steps to run this Laravel project using XAMPP:
+
+### 1. Install XAMPP
+- Download and install XAMPP from [https://www.apachefriends.org/index.html](https://www.apachefriends.org/index.html).
+- Start the **Apache** and **MySQL** modules from the XAMPP Control Panel.
+
+### 2. Clone the Project
+- Clone this repository to your local machine.
+
+### 3. Set Up the Environment
+- Copy `.env.example` to `.env`:
+  ```bash
+  cp .env.example .env
+  ```
+- Open `.env` and update the following lines to match your XAMPP MySQL settings:
+  ```env
+  DB_CONNECTION=mysql
+  DB_HOST=127.0.0.1
+  DB_PORT=3306
+  DB_DATABASE=your_database_name
+  DB_USERNAME=root
+  DB_PASSWORD=
+  ```
+  Replace `your_database_name` with the name you want for your database.
+
+### 4. Create the Database
+- Open **phpMyAdmin** at [http://localhost/phpmyadmin](http://localhost/phpmyadmin).
+- Create a new database with the name you set in `.env`.
+
+### 5. Install Composer Dependencies
+- Make sure you have [Composer](https://getcomposer.org/) installed.
+- In your project directory, run:
+  ```bash
+  composer install
+  ```
+
+### 6. Generate Application Key
+```bash
+php artisan key:generate
+```
+
+### 7. Run Migrations and Seeders (Optional)
+```bash
+php artisan migrate --seed
+```
+
+### 8. Serve the Application
+```bash
+php artisan serve
+```
+- The application will be available at [http://localhost:8000](http://localhost:8000).
+
+---
